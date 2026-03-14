@@ -1,0 +1,28 @@
+# A bare Pod running the movies-api container.
+# Note: Pods are rarely used directly in practice — Deployments manage them.
+# We use a raw Pod here just to learn the basic structure.
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: movies-api
+  labels:
+    app: movies-api
+spec:
+  containers:
+    - name: movies-api
+      image: movies-api:v1
+      imagePullPolicy: Never   # image is loaded locally into minikube, not on Docker Hub
+      ports:
+        - containerPort: 8080
+      env:
+        - name: DB_HOST
+          value: "localhost"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_USER
+          value: "postgres"
+        - name: DB_PASSWORD
+          value: "postgres"
+        - name: DB_NAME
+          value: "movies"

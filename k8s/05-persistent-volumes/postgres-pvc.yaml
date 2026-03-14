@@ -1,0 +1,13 @@
+# PersistentVolumeClaim — the pod's request for storage.
+# k8s binds this to a PV that matches the size and accessMode.
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

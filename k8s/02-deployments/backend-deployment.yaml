@@ -1,0 +1,53 @@
+# Deployment for the movies-api backend.
+# Manages 3 replicas of the backend pod — self-heals on crash, supports rolling updates.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movies-api
+spec:
+  replicas: 3
+
+  # selector tells the Deployment which pods it owns.
+  # Must match the labels in template.metadata.labels below.
+  selector:
+    matchLabels:
+      app: movies-api
+
+  template:  # everything below here is the Pod spec
+    metadata:
+      labels:
+        app: movies-api  # must match selector.matchLabels above
+    spec:
+      containers:
+        - name: movies-api
+          image: movies-api:v1
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: movies-api-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: movies-api-config
+                  key: DB_PORT
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: movies-api-config
+                  key: DB_USER
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: movies-api-config
+                  key: DB_NAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: movies-api-secret
+                  key: DB_PASSWORD

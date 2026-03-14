@@ -1,0 +1,12 @@
+# ConfigMap holding non-sensitive database connection config for the backend.
+# Decouples config from the Deployment — change values here without touching the Deployment.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: movies-api-config
+data:
+  DB_HOST: "postgres"
+  DB_PORT: "5432"
+  DB_USER: "postgres"
+  DB_NAME: "movies"

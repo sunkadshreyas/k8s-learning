@@ -1,0 +1,48 @@
+# StatefulSet for postgres.
+# Unlike a raw Pod: self-heals on crash, stable pod name (postgres-0),
+# and owns its storage via volumeClaimTemplates.
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+spec:
+  serviceName: postgres   # must match the ClusterIP Service name
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: postgres
+
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_DB
+              value: "movies"
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata   # subdirectory avoids mount permission issues
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+
+  # volumeClaimTemplates: StatefulSet automatically creates a PVC per pod.
+  # postgres-0 gets PVC named "postgres-data-postgres-0" — always the same on restart.
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi

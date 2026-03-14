@@ -1,0 +1,15 @@
+# PersistentVolume — a piece of storage that exists independently of any pod.
+# In minikube, hostPath mounts a directory from the node's filesystem.
+# In production this would be an AWS EBS volume, GCP disk, NFS, etc.
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce      # can be mounted by one node at a time (right for a DB)
+  hostPath:
+    path: /data/postgres # directory on the minikube node's filesystem

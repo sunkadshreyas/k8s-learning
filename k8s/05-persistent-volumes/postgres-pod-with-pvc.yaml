@@ -1,0 +1,26 @@
+# Postgres Pod that mounts the PVC — data survives pod restarts.
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  containers:
+    - name: postgres
+      image: postgres:16
+      ports:
+        - containerPort: 5432
+      env:
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "movies"
+      volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data  # where postgres stores its data files
+  volumes:
+    - name: postgres-storage
+      persistentVolumeClaim:
+        claimName: postgres-pvc  # bind to our PVC

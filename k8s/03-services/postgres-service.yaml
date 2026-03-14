@@ -1,0 +1,14 @@
+# ClusterIP Service for postgres — gives it a stable DNS name inside the cluster.
+# Any pod can now reach postgres at: postgres:5432
+# ClusterIP is the default type — only reachable within the cluster.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  selector:
+    app: postgres    # routes traffic to pods with this label
+  ports:
+    - port: 5432       # port the Service listens on
+      targetPort: 5432 # port the container listens on

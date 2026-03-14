@@ -1,0 +1,20 @@
+# A bare postgres Pod — temporary, just to demonstrate Services.
+# We'll replace this with a StatefulSet + PersistentVolume later.
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  containers:
+    - name: postgres
+      image: postgres:16
+      ports:
+        - containerPort: 5432
+      env:
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "movies"
