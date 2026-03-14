@@ -1,3 +1,6 @@
 app/frontend/node_modules/
 app/frontend/.next/
 app/backend/movies-api
+
+# Never commit actual secret values
+k8s/04-configmaps-secrets/backend-secret.yaml
